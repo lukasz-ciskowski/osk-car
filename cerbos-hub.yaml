@@ -1,0 +1,6 @@
+apiVersion: api.cerbos.cloud/v1
+labels:
+  latest: 
+    branch: main 
+  v2:
+    tag: v2 
