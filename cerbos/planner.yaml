@@ -1,0 +1,17 @@
+apiVersion: api.cerbos.cloud/v1
+resourcePolicy:
+  resource: planner
+  version: default
+  rules:
+    - actions:
+        - read
+      roles:
+        - student
+      effect: EFFECT_ALLOW
+
+    - actions:
+        - write
+      roles:
+        - instructor
+        - student
+      effect: EFFECT_ALLOW
