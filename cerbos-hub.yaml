@@ -4,3 +4,5 @@ labels:
     branch: main 
   v2:
     tag: v2 
+  hotfix:
+    commitHash: 28b70bbcc0ce7301b16e4482c835b485ee471647 
