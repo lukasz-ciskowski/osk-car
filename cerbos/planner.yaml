@@ -6,12 +6,12 @@ resourcePolicy:
     - actions:
         - read
       roles:
-        - student
+        - Student
       effect: EFFECT_ALLOW
 
     - actions:
         - write
       roles:
-        - instructor
-        - student
+        - Instructor
+        - Student
       effect: EFFECT_ALLOW
