@@ -7,7 +7,7 @@ resourcePolicy:
         - read
       roles:
         - Student
-        - Student
+        - Instructor
       effect: EFFECT_ALLOW
 
     - actions:
