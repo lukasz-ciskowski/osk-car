@@ -9,7 +9,7 @@ class UserRepository {
         });
     }
 
-    async findUserByUserId(clerkId: string): Promise<User | null> {
+    async findUserByClerkId(clerkId: string): Promise<User | null> {
         return await prisma.user.findUnique({
             where: {
                 clerkId: clerkId,

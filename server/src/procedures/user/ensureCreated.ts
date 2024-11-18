@@ -1,14 +1,10 @@
-import { publicProcedure } from '../../router';
-import * as z from 'zod';
+import { authProcedure } from '../../router';
 import { userService } from '../../services/UserService';
-
-const ensureCreatedInput = z.object({
-    userId: z.string(),
-});
-
-export type EnsureCreatedInput = z.infer<typeof ensureCreatedInput>;
+import { TRPCError } from '@trpc/server';
 
 export const ensureCreatedUser = () =>
-    publicProcedure.input(ensureCreatedInput).mutation((query) => {
-        return userService.findOrCreate(query.input.userId);
+    authProcedure.mutation((opts) => {
+        const id = opts.ctx.clerkId;
+        if (!id) throw new TRPCError({ code: 'UNAUTHORIZED' });
+        return userService.findOrCreate(id);
     });

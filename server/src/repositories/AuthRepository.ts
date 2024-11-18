@@ -1,32 +1,22 @@
-import { v1 } from '@authzed/authzed-node';
+import { createClerkClient } from '@clerk/clerk-sdk-node';
 import { Context } from 'hono';
-import { env } from 'hono/adapter';
 import { AppEnv } from '..';
-
-const schema = `
-definition oskcar/user {}
-definition oskcar/planner {
-	relation student: oskcar/user
-	relation instructor: oskcar/user
-	permission read = student + instructor
-	permission write = instructor
-}`;
+import { env } from 'hono/adapter';
 
 class AuthRepository {
-    private _client!: v1.ZedClientInterface;
+    private clerkClient!: ReturnType<typeof createClerkClient>;
 
-    constructor() {}
-
-    async connect(context: Context) {
-        const token = env<AppEnv>(context).AUTHZED_TOKEN;
-        this._client = v1.NewClient(token, 'grpc.authzed.com:443');
-        const request = v1.WriteSchemaRequest.create({
-            schema: schema,
-        });
-        await this._client.promises.writeSchema(request);
+    connect(context: Context) {
+        const key = env<AppEnv>(context).CLERK_KEY;
+        this.clerkClient = createClerkClient({ secretKey: key });
     }
 
-    check() {}
+    async validateJWT(token: string): Promise<{ userId: string } | null> {
+        const isValid = await this.clerkClient.verifyToken(token);
+        if (!isValid) return null;
+
+        return { userId: isValid.sub };
+    }
 }
 
 export const authRepository = new AuthRepository();

@@ -7,7 +7,7 @@ function Header() {
             <div className="max-w-screen-2xl mx-auto p-2 flex justify-between items-center">
                 <img src={logo} alt="logo" className="h-10" />
                 <div>
-                    <UserButton />
+                    <UserButton signInUrl="/sign-in" />
                 </div>
             </div>
         </div>
