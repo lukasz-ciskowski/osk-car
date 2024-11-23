@@ -1,23 +1,26 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../../../server/src/router';
+import { AppRouter } from '../../../server/src/router';
+import { SessionExpiryError } from '@/errors/SessionExpiryError';
 
-export const unauthorizedTrpc = createTRPCProxyClient<AppRouter>({
-    links: [
-        httpBatchLink({
-            url: 'http://localhost:3000/trpc',
-        }),
-    ],
-});
+interface Args {
+    getToken: () => Promise<string | null>;
+}
 
-export const authorizedTrpc = (token: string) => {
+export const setupTrpc = ({ getToken }: Args) => {
     return createTRPCProxyClient<AppRouter>({
         links: [
             httpBatchLink({
                 url: 'http://localhost:3000/trpc',
-                headers: {
-                    Authorization: `Bearer ${token}`,
+                async headers() {
+                    const token = await getToken();
+                    if (!token) throw new SessionExpiryError();
+                    return {
+                        authorization: token,
+                    };
                 },
             }),
         ],
     });
 };
+
+export type TrpcInstance = ReturnType<typeof setupTrpc>;

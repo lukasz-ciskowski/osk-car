@@ -1,0 +1,15 @@
+.fc-button-primary {
+    @apply !bg-primary !border-primary/60 !shadow-none hover:!bg-primary/90;
+}
+
+.fc-toolbar-title {
+    @apply capitalize font-semibold border-b border-primary;
+}
+
+.fc-day.editable {
+    cursor: pointer;
+}
+
+.fc-day-today {
+    @apply !bg-primary/10;
+}

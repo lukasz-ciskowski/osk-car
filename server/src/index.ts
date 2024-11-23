@@ -1,10 +1,10 @@
 import { trpcServer } from '@hono/trpc-server';
 import { Hono } from 'hono';
-import { contextStorage, getContext } from 'hono/context-storage';
 import { logger } from 'hono/logger';
 import { appRouter } from './router';
 import { roleRepository } from './repositories/RoleRepository';
 import { authRepository } from './repositories/AuthRepository';
+import { cors } from 'hono/cors';
 
 export interface AppEnv extends Record<string, unknown> {
     DATABASE_URL: string;
@@ -20,11 +20,11 @@ app.use(async (c, next) => {
     await next();
 });
 
-app.get('/', (c) => {
-    // authRepository.check();
+app.get('/', async (c) => {
     return c.text('Hello Hono!');
 });
 
+app.use('/*', cors());
 app.use(
     '/trpc/*',
     trpcServer({

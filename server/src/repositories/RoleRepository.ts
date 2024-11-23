@@ -18,7 +18,7 @@ class RoleRepository {
         });
     }
 
-    checkRole(user: User, module: Modules) {
+    async checkRole(user: User, module: Modules) {
         const resourceObject = {
             principal: {
                 id: user.id,
@@ -30,16 +30,17 @@ class RoleRepository {
             },
         };
 
-        return module.actions.reduce<Partial<RoleResponse>>((acc, action) => {
+        return await module.actions.reduce<Promise<Partial<RoleResponse>>>(async (accPromise, action) => {
+            const acc = await accPromise;
             acc[module.kind] = {
                 ...acc[module.kind],
-                [action]: !!this.client.isAllowed({
+                [action]: !!(await this.client.isAllowed({
                     ...resourceObject,
                     action,
-                }),
+                })),
             };
             return acc;
-        }, {});
+        }, Promise.resolve({}));
     }
 }
 

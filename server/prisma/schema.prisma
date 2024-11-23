@@ -18,3 +18,9 @@ enum UserType {
   Instructor
   Admin
 }
+
+enum LessonType {
+  Teoretical
+  Practical
+  PreDrivingTest
+}

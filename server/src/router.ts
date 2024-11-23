@@ -1,7 +1,8 @@
 import { initTRPC } from '@trpc/server';
 import { setupUserRouter } from './procedures/user/router';
 import { isAuth } from './middleware/isAuth';
-import { setupRoleRouter } from './procedures/roles/router';
+import { setupRoleRouter } from './procedures/role/router';
+import { setupLessonRouter } from './procedures/lesson/router';
 
 export interface TrpcContext {
     token: string | null;
@@ -17,6 +18,7 @@ export const authProcedure = t.procedure.use(isAuth);
 export const appRouter = router({
     user: setupUserRouter(),
     role: setupRoleRouter(),
+    lesson: setupLessonRouter(),
 });
 
 export type AppRouter = typeof appRouter;

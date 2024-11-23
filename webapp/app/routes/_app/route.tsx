@@ -1,15 +1,21 @@
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs, redirect, redirectDocument } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import Header from './header';
-import { authorizedTrpc } from '@/lib/trpc';
-import { getAuthToken } from '@/actions/token';
+import { trpcServer } from '@/lib/trpc.server';
 import { SignedIn } from '@clerk/remix';
 
-export const loader = async (args: LoaderFunctionArgs) => {
-    const token = await getAuthToken(args);
-    await authorizedTrpc(token).user.ensureCreated.mutate();
+export function shouldRevalidate() {
+    // ensure that the user is created only once
+    return false;
+}
 
-    return {};
+export const loader = async (args: LoaderFunctionArgs) => {
+    const server = await trpcServer(args);
+    if (!server) return redirect('/sign-in');
+
+    await server.user.ensureCreated.mutate();
+
+    return { ok: true };
 };
 
 function Layout() {
