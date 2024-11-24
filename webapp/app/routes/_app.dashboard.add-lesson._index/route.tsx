@@ -11,11 +11,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { getValidatedFormData, RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { ActionFunctionArgs } from '@remix-run/node';
-import { Form, useLocation, useSearchParams } from '@remix-run/react';
-import { LessonFormState, lessonSchema } from '@/features/lesson/schemas/lessonSchema';
+import { Form, useSearchParams } from '@remix-run/react';
 import LessonForm from '@/features/lesson/ui/LessonForm';
+import { LessonSchema, LessonForm as LessonFormState } from '@osk-car/models';
 
-const resolver = zodResolver(lessonSchema);
+const resolver = zodResolver(LessonSchema);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const { errors, data, receivedValues: defaultValues } = await getValidatedFormData<FormData>(request, resolver);

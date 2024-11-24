@@ -1,7 +1,6 @@
-import { LoaderFunctionArgs, redirect, redirectDocument } from '@remix-run/node';
-import { Outlet } from '@remix-run/react';
+import { LoaderFunctionArgs } from '@remix-run/node';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import Header from './header';
-import { trpcServer } from '@/lib/trpc.server';
 import { SignedIn } from '@clerk/remix';
 
 export function shouldRevalidate() {
@@ -10,15 +9,14 @@ export function shouldRevalidate() {
 }
 
 export const loader = async (args: LoaderFunctionArgs) => {
-    const server = await trpcServer(args);
-    if (!server) return redirect('/sign-in');
+    const trpcServer = args.context.trpcServer;
+    await trpcServer.user.ensureCreated.mutate();
 
-    await server.user.ensureCreated.mutate();
-
-    return { ok: true };
+    return {};
 };
 
 function Layout() {
+    const result = useLoaderData<typeof loader>();
     return (
         <SignedIn>
             <Header />

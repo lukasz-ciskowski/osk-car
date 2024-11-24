@@ -1,14 +1,10 @@
 import { FormField } from '@/components/ui/form';
-import { getLessonTypesQuery } from '@/entities/lesson/api/getLessonTypes';
-import { trpcClient } from '@/lib/trpcClient';
-import { useQuery } from '@tanstack/react-query';
 import { useFormContext } from 'react-hook-form';
-import { LessonFormState } from '../schemas/lessonSchema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { lessonTypesDictionary } from '@/entities/lesson/lib/lessonTypes';
+import { LessonForm as LessonFormState } from '@osk-car/models';
 
 function LessonForm() {
-    const { data } = useQuery(getLessonTypesQuery(trpcClient));
     const { control } = useFormContext<LessonFormState>();
 
     return (
@@ -22,9 +18,9 @@ function LessonForm() {
                             <SelectValue placeholder="Wybierz typ lekcji" />
                         </SelectTrigger>
                         <SelectContent>
-                            {data?.map((type) => (
-                                <SelectItem key={type} value={type}>
-                                    {lessonTypesDictionary[type]}
+                            {Object.entries(lessonTypesDictionary).map(([key, translation]) => (
+                                <SelectItem key={key} value={key}>
+                                    {translation}
                                 </SelectItem>
                             ))}
                         </SelectContent>

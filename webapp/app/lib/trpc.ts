@@ -1,9 +1,8 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import { AppRouter } from '../../../server/src/router';
-import { SessionExpiryError } from '@/errors/SessionExpiryError';
 
 interface Args {
-    getToken: () => Promise<string | null>;
+    getToken: () => Promise<string>;
 }
 
 export const setupTrpc = ({ getToken }: Args) => {
@@ -13,7 +12,6 @@ export const setupTrpc = ({ getToken }: Args) => {
                 url: 'http://localhost:3000/trpc',
                 async headers() {
                     const token = await getToken();
-                    if (!token) throw new SessionExpiryError();
                     return {
                         authorization: token,
                     };

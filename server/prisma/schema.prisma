@@ -19,8 +19,7 @@ enum UserType {
   Admin
 }
 
-enum LessonType {
-  Teoretical
-  Practical
-  PreDrivingTest
+model TheorericalLesson {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  date DateTime
 }

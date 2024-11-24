@@ -1,4 +1,4 @@
-import { CourseType, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import objectId from 'bson-objectid';
 
 const prisma = new PrismaClient();
