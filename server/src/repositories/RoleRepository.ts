@@ -21,11 +21,11 @@ class RoleRepository {
     async checkRole(user: User, module: Modules) {
         const resourceObject = {
             principal: {
-                id: user.id,
+                id: user.id.toString(),
                 roles: [user.type],
             },
             resource: {
-                id: user.id,
+                id: user.id.toString(),
                 kind: module.kind,
             },
         };

@@ -1,7 +1,11 @@
 {
     "name": "server",
     "scripts": {
-        "dev": "bun run --hot src/index.ts"
+        "dev": "bun run --hot src/index.ts",
+        "migrate": "prisma migrate dev"
+    },
+    "prisma": {
+        "seed": "npx tsx prisma/seed.ts"
     },
     "dependencies": {
         "@cerbos/grpc": "^0.18.4",
@@ -10,7 +14,6 @@
         "@hono/trpc-server": "^0.3.2",
         "@osk-car/models": "1.0.0",
         "@prisma/client": "^5.22.0",
-        "bson-objectid": "^2.0.4",
         "hono": "^4.6.10",
         "prisma": "^5.22.0",
         "zod": "^3.23.8"

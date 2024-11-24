@@ -1,5 +1,5 @@
 export enum LessonType {
-    Teoretical = 'Teoretical',
+    Theoretical = 'Theoretical',
     Practical = 'Practical',
     PreDrivingTest = 'PreDrivingTest',
 }

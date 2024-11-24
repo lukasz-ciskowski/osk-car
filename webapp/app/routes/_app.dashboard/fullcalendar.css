@@ -8,6 +8,7 @@
 
 .fc-day.editable {
     cursor: pointer;
+    user-select: none;
 }
 
 .fc-day-today {
