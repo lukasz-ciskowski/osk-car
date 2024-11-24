@@ -1,12 +1,12 @@
 import { User } from '@prisma/client';
-import { PlannerModule } from '../models/AuthModel';
+import { Modules, PlannerModule } from '../models/AuthModel';
 import { userRepository } from '../repositories/UserRepository';
 import { roleRepository } from '../repositories/RoleRepository';
 
 class RoleService {
     private cached_users: Record<string, User> = {};
 
-    async checkRole(clerkId: string, module: PlannerModule) {
+    async checkRole(clerkId: string, module: Modules) {
         const userCached = !!this.cached_users[clerkId];
 
         if (!userCached) {

@@ -1,10 +1,10 @@
 import { authUserProcedure } from '../../router';
-import { PlannerModuleSchema } from '../../schemas/AuthSchema';
+import { ModulesSchema } from '../../schemas/AuthSchema';
 import { roleService } from '../../services/RoleService';
 import { TRPCError } from '@trpc/server';
 
 export const checkRole = () =>
-    authUserProcedure.input(PlannerModuleSchema).query((opts) => {
+    authUserProcedure.input(ModulesSchema).query((opts) => {
         const id = opts.ctx.clerkId;
         if (!id) throw new TRPCError({ code: 'UNAUTHORIZED' });
 

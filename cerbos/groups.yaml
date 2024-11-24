@@ -1,6 +1,6 @@
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
-  resource: planner
+  resource: groups
   version: default
   rules:
     - actions:
@@ -15,4 +15,3 @@ resourcePolicy:
       roles:
         - Instructor
       effect: EFFECT_ALLOW
-

@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { PlannerModuleSchema } from '../schemas/AuthSchema';
+import { GroupsModuleSchema, ModulesSchema, PlannerModuleSchema } from '../schemas/AuthSchema';
 
 export type PlannerModule = z.infer<typeof PlannerModuleSchema>;
-
-const ModulesSchema = PlannerModuleSchema;
+export type GroupsModule = z.infer<typeof GroupsModuleSchema>;
 
 export type Modules = z.infer<typeof ModulesSchema>;

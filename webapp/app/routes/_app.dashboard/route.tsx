@@ -5,12 +5,8 @@ import { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData, useNavigate, useNavigation, useOutlet } from '@remix-run/react';
 import './fullcalendar.css';
 import { cn } from '@/lib/utils';
-import { dehydrate } from '@tanstack/react-query';
-import { queryClient } from '@/queryClient';
 import { Dialog } from '@/components/ui/dialog';
 import FullscreenSpinner from '@/components/ui/fullscreenSpinner';
-import AddLessonModal from '../_app.dashboard.add-lesson._index/route';
-import { DialogTrigger } from '@radix-ui/react-dialog';
 
 export const loader = async (args: LoaderFunctionArgs) => {
     const trpcServer = args.context.trpcServer;
@@ -22,7 +18,6 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
     return {
         role: result,
-        dehydratedState: dehydrate(queryClient),
     };
 };
 
