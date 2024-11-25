@@ -10,6 +10,7 @@ import { setupClassroomRouter } from './procedures/classroom/router';
 export interface TrpcContext {
     token: string | null;
     clerkId: string | null;
+    userId: number | null;
 }
 
 const t = initTRPC.context<TrpcContext>().create();

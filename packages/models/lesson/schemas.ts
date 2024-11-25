@@ -4,6 +4,7 @@ import { LessonType } from './models';
 const BaseLessonSchema = z.object({
     startsAt: z.coerce.date(),
     endsAt: z.coerce.date(),
+    instructorId: z.coerce.number(),
 });
 
 export const TheoreticalSchema = BaseLessonSchema.extend({

@@ -17,6 +17,10 @@ class AuthRepository {
 
         return { userId: isValid.sub };
     }
+
+    async getUser(userId: string) {
+        return await this.clerkClient.users.getUser(userId);
+    }
 }
 
 export const authRepository = new AuthRepository();

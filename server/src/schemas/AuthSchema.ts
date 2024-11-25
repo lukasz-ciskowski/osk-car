@@ -10,4 +10,9 @@ export const GroupsModuleSchema = z.object({
     actions: z.array(z.union([z.literal('read'), z.literal('write')])),
 });
 
-export const ModulesSchema = z.union([PlannerModuleSchema, GroupsModuleSchema]);
+export const InstructorsListModuleSchema = z.object({
+    kind: z.literal('instructors_list'),
+    actions: z.array(z.literal('read')),
+});
+
+export const ModulesSchema = z.union([PlannerModuleSchema, GroupsModuleSchema, InstructorsListModuleSchema]);

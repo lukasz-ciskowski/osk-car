@@ -8,15 +8,28 @@ import { createDateWithTime } from '../lib/dates';
 import TimePicker from '@/components/ui/timePicker';
 import LengthPicker from '@/components/ui/lengthPicker';
 import TheoreticalLessonForm from './TheoreticalLessonForm';
+import { useAuth, useUser } from '@clerk/remix';
+import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
+import { useMemo } from 'react';
 
 interface Props {
+    canSeeInstructorsList: boolean;
+    currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
     date: Date;
 }
 
-function LessonForm({ date }: Props) {
+function LessonForm({ date, canSeeInstructorsList, currentUser }: Props) {
     const { control, watch, setValue, getValues } = useFormContext<LessonFormState>();
 
     const type = watch('type');
+
+    const instructorsList = useMemo(() => {
+        if (!canSeeInstructorsList) {
+            return [{ id: currentUser?.id ?? 0, fullName: `${currentUser?.firstName} ${currentUser?.lastName}` }];
+        }
+        return [];
+    }, [currentUser]);
+
     return (
         <>
             <div className="flex flex-col gap-6">
@@ -34,6 +47,32 @@ function LessonForm({ date }: Props) {
                                     {Object.entries(lessonTypesDictionary).map(([key, translation]) => (
                                         <SelectItem key={key} value={key}>
                                             {translation}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    name="instructorId"
+                    control={control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Instruktor</FormLabel>
+                            <Select
+                                value={field.value.toString()}
+                                onValueChange={field.onChange}
+                                disabled={!canSeeInstructorsList}
+                            >
+                                <SelectTrigger autoFocus>
+                                    <SelectValue placeholder="Wybierz instruktora zajęć" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {instructorsList.map((instructor) => (
+                                        <SelectItem key={instructor.id} value={instructor.id.toString()}>
+                                            {instructor.fullName}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>

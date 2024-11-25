@@ -1,8 +1,8 @@
 import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { getClassroomsQueryObject } from '@/entities/classrooms/api/getClassrooms';
-import { getGroupsQueryObject } from '@/entities/groups/api/getGroups';
+import { getClassroomsQueryObject } from '@/entities/classroom/api/getClassrooms';
+import { getGroupsQueryObject } from '@/entities/group/api/getGroups';
 import { trpcClient } from '@/lib/trpcClient';
 import { TheoreticalLessonForm as TheoreticalLessonFormState } from '@osk-car/models';
 import { useQueries } from '@tanstack/react-query';

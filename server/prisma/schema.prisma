@@ -8,15 +8,27 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  clerkId String   @unique
-  type    UserType
+  id                   Int                    @id @default(autoincrement())
+  clerkId              String                 @unique
+  firstName            String
+  lastName             String
+  type                 UserType
+  UserGroupAssociation UserGroupAssociation[]
+  TheoreticalLesson    TheoreticalLesson[]
 }
 
 enum UserType {
   Student
   Instructor
   Admin
+}
+
+model UserGroupAssociation {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  groupId Int
+  group   Group @relation(fields: [groupId], references: [id])
 }
 
 model Classroom {
@@ -26,17 +38,20 @@ model Classroom {
 }
 
 model Group {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  theoreticalLesson TheoreticalLesson[]
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  theoreticalLesson    TheoreticalLesson[]
+  UserGroupAssociation UserGroupAssociation[]
 }
 
 model TheoreticalLesson {
-  id          String    @id @default(uuid()) @map("_id")
-  startsAt    DateTime
-  endsAt      DateTime
-  classroom   Classroom @relation(fields: [classroomId], references: [id])
-  classroomId Int
-  group       Group     @relation(fields: [groupId], references: [id])
-  groupId     Int
+  id           String    @id @default(uuid()) @map("_id")
+  startsAt     DateTime
+  endsAt       DateTime
+  classroom    Classroom @relation(fields: [classroomId], references: [id])
+  classroomId  Int
+  group        Group     @relation(fields: [groupId], references: [id])
+  groupId      Int
+  instructor   User      @relation(fields: [instructorId], references: [id])
+  instructorId Int
 }

@@ -1,5 +1,5 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 
 import './tailwind.css';
 import { rootAuthLoader } from '@clerk/remix/ssr.server';
@@ -10,6 +10,10 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './queryClient';
 
 export const loader: LoaderFunction = (args) => rootAuthLoader(args);
+
+export const meta: MetaFunction = () => {
+    return [{ title: 'OSK-Car' }];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
@@ -24,7 +28,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     rel="stylesheet"
                 />
                 <Meta />
-                <style data-fullcalendar />
                 <Links />
             </head>
             <body>

@@ -1,0 +1,44 @@
+.rbc-day-bg {
+    cursor: pointer;
+    user-select: none;
+}
+
+.rbc-today {
+    @apply bg-primary/10;
+}
+
+.rbc-event {
+    @apply bg-primary/80;
+}
+
+.rbc-off-range {
+    @apply opacity-20;
+}
+
+.rbc-off-range-bg {
+    @apply bg-transparent;
+}
+
+.rbc-month-row {
+    @apply !border-gray-200;
+}
+
+.rbc-day-bg {
+    @apply !border-gray-100;
+}
+
+.rbc-header {
+    @apply !border-l-0;
+}
+.rbc-time-header-cell .rbc-header {
+    @apply !border-none;
+}
+
+.rbc-allday-cell {
+    display: none;
+    border: none;
+}
+
+.rbc-header.rbc-today {
+    @apply !bg-transparent;
+}

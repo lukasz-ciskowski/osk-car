@@ -5,3 +5,9 @@ export const lessonTypesDictionary: Record<LessonType, string> = {
     Practical: 'Zajęcia praktyczne',
     PreDrivingTest: 'Zajęcia przed egzaminem praktycznym',
 };
+
+export const lessonTypesDictionaryShort: Record<LessonType, string> = {
+    Theoretical: 'Teoria',
+    Practical: 'Praktyka',
+    PreDrivingTest: 'Przed egzaminem',
+};

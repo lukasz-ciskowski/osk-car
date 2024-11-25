@@ -1,0 +1,12 @@
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  resource: instructors_list
+  version: default
+  rules:
+    - actions:
+        - read
+      roles:
+        - Admin
+      effect: EFFECT_ALLOW
+
+
