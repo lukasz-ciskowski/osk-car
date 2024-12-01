@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
-import { Modules } from '../models/AuthModel';
 import { roleRepository } from '../repositories/RoleRepository';
+import { Modules } from '@osk-car/models';
 
 class RoleService {
     async checkRole(user: User, module: Modules) {

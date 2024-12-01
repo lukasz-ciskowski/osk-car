@@ -7,24 +7,40 @@ import { getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
 import { queryClient } from '@/queryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { Route } from './+types/layout';
+import { checkRoleQueryObject } from '@/entities/role/api/checkRole';
 
 export const loader = async (args: Route.LoaderArgs) => {
-    const trpcServer = args.context.trpcServer;
+    const trpcServer = args.context.trpcServer!;
 
     const [groupsResult, studentsResult, plannerResult] = await Promise.all([
-        trpcServer.role.checkRole.query({
-            kind: 'groups',
-            actions: ['read'],
-        }),
-        trpcServer.role.checkRole.query({
-            kind: 'students_list',
-            actions: ['read'],
-        }),
-        trpcServer.role.checkRole.query({
-            kind: 'planner',
-            actions: ['write'],
-        }),
-        await queryClient.prefetchQuery(getCurrentUserQueryObject(trpcServer)),
+        queryClient.fetchQuery(
+            checkRoleQueryObject({
+                trpc: trpcServer,
+                query: {
+                    kind: 'groups',
+                    actions: ['read'],
+                },
+            }),
+        ),
+        queryClient.fetchQuery(
+            checkRoleQueryObject({
+                trpc: trpcServer,
+                query: {
+                    kind: 'students_list',
+                    actions: ['read'],
+                },
+            }),
+        ),
+        queryClient.fetchQuery(
+            checkRoleQueryObject({
+                trpc: trpcServer,
+                query: {
+                    kind: 'planner',
+                    actions: ['write'],
+                },
+            }),
+        ),
+        queryClient.prefetchQuery(getCurrentUserQueryObject(trpcServer)),
     ]);
 
     return {
@@ -32,10 +48,6 @@ export const loader = async (args: Route.LoaderArgs) => {
         dehydratedState: dehydrate(queryClient),
     };
 };
-
-export function shouldRevalidate() {
-    return false;
-}
 
 function Layout({ loaderData }: Route.ComponentProps) {
     const navigation = useNavigation();

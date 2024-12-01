@@ -1,4 +1,3 @@
-import { User } from '@clerk/backend';
 import { authProcedure } from '../../router';
 import { userService } from '../../services/UserService';
 import { TRPCError } from '@trpc/server';

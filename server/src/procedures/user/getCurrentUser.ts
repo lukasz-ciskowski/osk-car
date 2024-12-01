@@ -1,11 +1,9 @@
-import { authProcedure, authUserProcedure, createCaller } from '../../router';
-import { userService } from '../../services/UserService';
+import { authUserProcedure } from '../../router';
 import { TRPCError } from '@trpc/server';
 
 export const getCurrentUser = () =>
     authUserProcedure.query((opts) => {
-        const userId = opts.ctx.userId;
-        if (!userId) throw new TRPCError({ code: 'UNAUTHORIZED' });
-
-        return userService.findUserById(userId);
+        const user = opts.ctx.user;
+        if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' });
+        return user;
     });

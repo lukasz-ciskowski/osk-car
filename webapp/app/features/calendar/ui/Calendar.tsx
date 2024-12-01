@@ -3,7 +3,6 @@ import './calendar.css';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { Calendar as ReactCalendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import { pl } from 'date-fns/locale/pl';
-import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
 import CustomToolbar from './CustomToolbar';
 import { SelectedDateSlot } from '@/features/event/model/slot';
 import { useWaitForClient } from '@/hooks/useWaitForClient';
@@ -11,7 +10,9 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { trpcClient } from '@/lib/trpcClient';
 import FullscreenSpinner from '@/components/ui/fullscreenSpinner';
 import CustomEvent from './CustomEvent';
-import { ListEvent } from '@/entities/lesson/model/event';
+import { ListEvent } from '@/entities/event/model/event';
+import { eventsQueryObject } from '@/entities/event/api/getAllEvents';
+import { getCurrentUser, getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
 
 interface Props {
     onSelectedDateSlot: (date: SelectedDateSlot) => void;
@@ -31,7 +32,8 @@ const localizer = dateFnsLocalizer({
 
 function Calendar({ canWriteLessons, onSelectedDateSlot, onSelectedEvent }: Props) {
     const isClientReady = useWaitForClient();
-    const { data: events, fetchStatus } = useSuspenseQuery(eventForInstructorQueryObject(trpcClient));
+    const { data: user } = useSuspenseQuery(getCurrentUserQueryObject(trpcClient));
+    const { data: events, fetchStatus } = useSuspenseQuery(eventsQueryObject(trpcClient, user));
 
     if (!isClientReady) return null;
 

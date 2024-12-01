@@ -1,6 +1,6 @@
 import { EventProps } from 'react-big-calendar';
 import { EventData } from './types';
-import { eventTypesDictionary } from '@/entities/lesson/lib/evenTypes';
+import { eventTypesDictionary } from '@/entities/event/lib/evenTypes';
 import { format } from 'date-fns';
 
 interface Props extends EventProps<EventData> {}

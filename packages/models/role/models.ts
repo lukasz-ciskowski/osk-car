@@ -1,10 +1,5 @@
 import { z } from 'zod';
-import {
-    GroupsModuleSchema,
-    StudentsListModuleSchema,
-    ModulesSchema,
-    PlannerModuleSchema,
-} from '../schemas/AuthSchema';
+import { GroupsModuleSchema, StudentsListModuleSchema, ModulesSchema, PlannerModuleSchema } from './schemas';
 
 export type PlannerModule = z.infer<typeof PlannerModuleSchema>;
 export type GroupsModule = z.infer<typeof GroupsModuleSchema>;

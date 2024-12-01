@@ -13,5 +13,4 @@ export const getCurrentUserQueryObject = (trpc: TrpcInstance) =>
     queryOptions({
         queryKey: ['user'],
         queryFn: () => getCurrentUser({ trpc }),
-        staleTime: Infinity,
     });

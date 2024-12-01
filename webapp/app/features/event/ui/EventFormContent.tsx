@@ -1,7 +1,7 @@
 import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { eventTypesDictionary } from '@/entities/lesson/lib/evenTypes';
+import { eventTypesDictionary } from '@/entities/event/lib/evenTypes';
 import { addMinutes, differenceInMinutes, format } from 'date-fns';
 import { createDateWithTime } from '../lib/dates';
 import TimePicker from '@/components/ui/timePicker';
@@ -10,6 +10,7 @@ import TheoreticalLessonForm from './TheoreticalLessonForm';
 import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
 import { useMemo } from 'react';
 import { EventForm, EventType } from '@osk-car/models';
+import PracticalLessonForm from './PracticalLessonForm';
 
 interface Props {
     currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
@@ -134,6 +135,7 @@ function EventFormContent({ currentUser }: Props) {
                 </div>
             </div>
             <div className="mt-8">{type === EventType.Theoretical && <TheoreticalLessonForm />}</div>
+            <div className="mt-8">{type === EventType.Practical && <PracticalLessonForm />}</div>
         </>
     );
 }

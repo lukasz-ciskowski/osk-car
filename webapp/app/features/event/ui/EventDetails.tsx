@@ -1,10 +1,10 @@
 import { TextLabel, TextLabelContainer, TextLabelValue } from '@/components/ui/textLabel';
-import { eventTypesDictionary } from '@/entities/lesson/lib/evenTypes';
+import { eventTypesDictionary } from '@/entities/event/lib/evenTypes';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale/pl';
 import TheoreticalEventDetails from './TheoreticalLessonDetails';
 import { EventType } from '@osk-car/models';
-import { RetrievedEvent } from '@/entities/lesson/model/event';
+import { RetrievedEvent } from '@/entities/event/model/event';
 import PracticalLessonDetails from './PracticalLessonDetails';
 
 interface Props {

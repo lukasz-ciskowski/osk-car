@@ -14,11 +14,11 @@ import { getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
 import { useForm } from 'react-hook-form';
 import { useMemo } from 'react';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { createEvent } from '@/entities/lesson/api/createEvent';
+import { createEvent } from '@/entities/event/api/createEvent';
 import { trpcClient } from '@/lib/trpcClient';
 import { FormProvider } from '@/components/ui/form';
 import { SelectedDateSlot } from '../model/slot';
-import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
+import { eventsQueryObject } from '@/entities/event/api/getAllEvents';
 import { EventForm, EventSchema } from '@osk-car/models';
 
 const resolver = zodResolver(EventSchema);
@@ -32,7 +32,7 @@ function AddEventModal({ dates, onClose }: Props) {
     const { mutate, isPending } = useMutation({
         mutationFn: createEvent,
     });
-    const queryClient = useQueryClient();
+    const client = useQueryClient();
     const currentUser = useSuspenseQuery(getCurrentUserQueryObject(trpcClient)).data;
 
     const startsAt = useMemo(() => {
@@ -64,9 +64,10 @@ function AddEventModal({ dates, onClose }: Props) {
             },
             {
                 onSuccess: () => {
-                    queryClient.refetchQueries({
-                        queryKey: eventForInstructorQueryObject(trpcClient).queryKey,
+                    client.invalidateQueries({
+                        queryKey: eventsQueryObject(trpcClient, currentUser).queryKey,
                     });
+
                     onClose();
                 },
             },

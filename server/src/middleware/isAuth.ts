@@ -13,6 +13,7 @@ export async function isAuth(opts: { ctx: TrpcContext; next: (opts: { ctx: TrpcC
         token: ctx.token,
         clerkId: clerkUser.userId,
         userId: null,
+        user: null,
     };
 
     return opts.next({

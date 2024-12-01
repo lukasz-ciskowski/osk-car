@@ -1,9 +1,11 @@
+import { User } from './entities/user/model/user';
 import { TrpcInstance } from './lib/trpc';
 
 declare module 'react-router' {
     // Your AppLoadContext used in v2
     interface AppLoadContext {
-        trpcServer: TrpcInstance;
+        trpcServer: TrpcInstance | null;
+        user: User | null;
     }
 }
 

@@ -1,5 +1,5 @@
 import { TextLabel, TextLabelContainer, TextLabelValue } from '@/components/ui/textLabel';
-import { RetrievedPracticalEvent, RetrievedTheoreticalEvent } from '@/entities/lesson/model/event';
+import { RetrievedPracticalEvent, RetrievedTheoreticalEvent } from '@/entities/event/model/event';
 
 interface Props {
     event: RetrievedPracticalEvent;

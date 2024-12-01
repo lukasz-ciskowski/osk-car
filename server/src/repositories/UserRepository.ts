@@ -23,6 +23,14 @@ class UserRepository {
             },
         });
     }
+
+    async getStudents() {
+        return await prisma.user.findMany({
+            where: {
+                type: 'Student',
+            },
+        });
+    }
 }
 
 export const userRepository = new UserRepository();

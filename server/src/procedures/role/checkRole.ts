@@ -1,5 +1,5 @@
+import { ModulesSchema } from '@osk-car/models';
 import { authUserProcedure } from '../../router';
-import { ModulesSchema } from '../../schemas/AuthSchema';
 import { roleService } from '../../services/RoleService';
 import { TRPCError } from '@trpc/server';
 

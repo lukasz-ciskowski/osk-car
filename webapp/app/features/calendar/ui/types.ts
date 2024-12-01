@@ -1,4 +1,4 @@
-import { getAllEventsForInstructor } from '@/entities/lesson/api/getAllEvents';
+import { getAllEventsForInstructor } from '@/entities/event/api/getAllEvents';
 
 export interface EventData {
     id: string;

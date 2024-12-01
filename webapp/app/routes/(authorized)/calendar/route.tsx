@@ -1,5 +1,4 @@
 import { MetaFunction } from 'react-router';
-import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
 import Calendar from '@/features/calendar/ui/Calendar';
 import { SelectedDateSlot } from '@/features/event/model/slot';
 import { useState } from 'react';
@@ -7,18 +6,25 @@ import AddEventModal from '@/features/event/ui/AddEventModal';
 import { queryClient } from '@/queryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import EventInfoModal from '@/features/event/ui/EventInfoModal';
-import { ListEvent } from '@/entities/lesson/model/event';
+import { ListEvent } from '@/entities/event/model/event';
 import { Route } from '../calendar/+types/route';
+import { checkRoleQueryObject } from '@/entities/role/api/checkRole';
+import { eventsQueryObject } from '@/entities/event/api/getAllEvents';
 
 export const loader = async (args: Route.LoaderArgs) => {
-    const trpcServer = args.context.trpcServer;
+    const trpcServer = args.context.trpcServer!;
 
     const [plannerRole] = await Promise.all([
-        trpcServer.role.checkRole.query({
-            kind: 'planner',
-            actions: ['write'],
-        }),
-        await queryClient.prefetchQuery(eventForInstructorQueryObject(trpcServer)),
+        await queryClient.fetchQuery(
+            checkRoleQueryObject({
+                trpc: trpcServer,
+                query: {
+                    kind: 'planner',
+                    actions: ['write'],
+                },
+            }),
+        ),
+        await queryClient.prefetchQuery(eventsQueryObject(trpcServer, args.context.user!)),
     ]);
 
     return {
@@ -64,7 +70,13 @@ function Dashboard({ loaderData }: Route.ComponentProps) {
                     onSelectedEvent={setSelectedEvent}
                 />
                 {selectedDateSlot && <AddEventModal dates={selectedDateSlot} onClose={handleCloseSlot} />}
-                {selectedEvent && <EventInfoModal event={selectedEvent} onClose={handleCloseEvent} />}
+                {selectedEvent && (
+                    <EventInfoModal
+                        event={selectedEvent}
+                        onClose={handleCloseEvent}
+                        canDelete={!!loaderData.role.plannerRole.planner?.write}
+                    />
+                )}
             </HydrationBoundary>
         </div>
     );

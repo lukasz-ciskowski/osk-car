@@ -22,7 +22,13 @@ class EventService {
         });
     }
 
-    async getAllEventsForStudent(userId: number) {}
+    async getAllEventsForStudent(userId: number) {
+        const result = await Promise.all([
+            theoreticalEventRepository.findAllForStudent(userId),
+            practicalEventRepository.findAllForStudent(userId),
+        ]);
+        return result.flat();
+    }
 
     async getAllEventsForInstructor(instructorId: number) {
         const result = await Promise.all([
@@ -42,6 +48,14 @@ class EventService {
         const result = await practicalEventRepository.findById(eventId);
         if (!result) throw new Error('Event not found');
         return result;
+    }
+
+    async deleteTheoreticalEvent(eventId: string) {
+        return await theoreticalEventRepository.deleteById(eventId);
+    }
+
+    async deletePracticalEvent(eventId: string) {
+        return await practicalEventRepository.deleteById(eventId);
     }
 }
 

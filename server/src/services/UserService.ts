@@ -12,7 +12,7 @@ class UserService {
 
             const newUser = await userRepository.createUser({
                 clerkId,
-                type: 'Instructor',
+                type: 'Student',
                 firstName: userInfo.firstName ?? '',
                 lastName: userInfo.lastName ?? '',
             });
@@ -25,6 +25,10 @@ class UserService {
 
     async findUserById(id: number) {
         return await userRepository.findUserById(id);
+    }
+
+    async getStudents() {
+        return await userRepository.getStudents();
     }
 }
 

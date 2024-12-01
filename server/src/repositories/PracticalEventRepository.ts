@@ -19,6 +19,15 @@ class PracticalEventRepository {
         return data.map(this._map);
     }
 
+    async findAllForStudent(studentId: number) {
+        const data = await prisma.practicalEvent.findMany({
+            where: {
+                studentId,
+            },
+        });
+        return data.map(this._map);
+    }
+
     async findById(id: string) {
         const result = await prisma.practicalEvent.findUnique({
             where: {
@@ -38,6 +47,14 @@ class PracticalEventRepository {
             ...event,
             type: EventType.Practical,
         };
+    }
+
+    async deleteById(id: string) {
+        return await prisma.practicalEvent.delete({
+            where: {
+                id: id,
+            },
+        });
     }
 }
 

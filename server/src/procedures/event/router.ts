@@ -1,6 +1,8 @@
 import { router } from '../../router';
 import { createPracticalEvent } from './createPracticalEvent';
 import { createTheoreticalEvent } from './createTheoreticalEvent';
+import { deletePracticalEvent } from './deletePracticalEvent';
+import { deleteTheoreticalEvent } from './deleteTheoreticalEvent';
 import { getAllEventsForInstructor } from './getAllEventsForInstructor';
 import { getAllEventsForStudent } from './getAllEventsForStudent';
 import { retrievePracticalEvent } from './retrievePracticalEvent';
@@ -14,4 +16,6 @@ export const setupEventRouter = () =>
         getAllEventsForInstructor: getAllEventsForInstructor(),
         retrieveTheoreticalEvent: retrieveTheoreticalEvent(),
         retrievePracticalEvent: retrievePracticalEvent(),
+        deleteTheoreticalEvent: deleteTheoreticalEvent(),
+        deletePracticalEvent: deletePracticalEvent(),
     });

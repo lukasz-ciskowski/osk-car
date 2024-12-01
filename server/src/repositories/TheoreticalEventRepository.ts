@@ -19,6 +19,21 @@ class TheoreticalEventRepository {
         return data.map(this._map);
     }
 
+    async findAllForStudent(studentId: number) {
+        const data = await prisma.theoreticalEvent.findMany({
+            where: {
+                group: {
+                    UserGroupAssociation: {
+                        some: {
+                            userId: studentId,
+                        },
+                    },
+                },
+            },
+        });
+        return data.map(this._map);
+    }
+
     async findById(id: string) {
         const result = await prisma.theoreticalEvent.findUnique({
             where: {
@@ -32,6 +47,14 @@ class TheoreticalEventRepository {
         });
         if (!result) return null;
         return this._map(result);
+    }
+
+    async deleteById(id: string) {
+        return await prisma.theoreticalEvent.delete({
+            where: {
+                id: id,
+            },
+        });
     }
 
     _map<T extends TheoreticalEvent>(event: T): T & { type: EventType.Theoretical } {

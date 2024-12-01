@@ -1,12 +1,12 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
-import type { LoaderFunction, MetaFunction } from 'react-router';
+import type { MetaFunction } from 'react-router';
 
 import './tailwind.css';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { plPL } from '@clerk/localizations';
 import TrpcProvider from './lib/trpcClient';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './queryClient';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export const meta: MetaFunction = () => {
     return [{ title: 'OSK-Car' }];
@@ -37,10 +37,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+    const [client] = useState(
+        new QueryClient({
+            defaultOptions: {
+                queries: {
+                    refetchOnMount: false,
+                    refetchOnReconnect: false,
+                    refetchOnWindowFocus: false,
+                    staleTime: 1000 * 60 * 5,
+                },
+            },
+        }),
+    );
+
+    console.log;
     return (
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={client}>
             <ClerkProvider
-                publishableKey={'pk_test_ZW5oYW5jZWQtY29yYWwtNDIuY2xlcmsuYWNjb3VudHMuZGV2JA'}
+                publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string}
                 afterSignOutUrl="/sign-in"
                 localization={plPL}
             >

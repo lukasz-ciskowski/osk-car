@@ -14,12 +14,14 @@ function SignIn() {
                         </CardTitle>
                         <CardDescription className="font-light">Centrum szkolenia kierowców online</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col gap-4 mt-5">
+                    <CardContent className="flex flex-col gap-4 mt-5 w-full items-stretch [&>div]:w-full ">
                         <SignInButton>
-                            <Button>Zaloguj się</Button>
+                            <Button className="w-full">Zaloguj się</Button>
                         </SignInButton>
                         <SignUpButton>
-                            <Button variant="outline">Zarejestruj się</Button>
+                            <Button variant="outline" className="w-full">
+                                Zarejestruj się
+                            </Button>
                         </SignUpButton>
                     </CardContent>
                 </Card>

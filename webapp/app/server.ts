@@ -1,9 +1,7 @@
 import { createHonoServer } from 'react-router-hono-server/node';
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth';
 import { Context } from 'hono';
-import { setupTrpc, TrpcInstance } from './lib/trpc';
-import { createClerkClient } from '@clerk/clerk-sdk-node';
-import { env } from 'hono/adapter';
+import { setupTrpc } from './lib/trpc';
 
 const unsecuredPaths = ['/sign-in'];
 
@@ -21,12 +19,14 @@ export default await createHonoServer({
             const auth = getAuth(c);
 
             // user goes to secured path without being signed in
-            if (!isUnsecured && !auth?.userId) throw new UnauthorizedError();
+            if (!isUnsecured && !auth?.userId) return c.redirect('/sign-in');
+
+            // user goes to unsecured path while being signed in
+            if (isUnsecured && !!auth?.userId) return c.redirect('/');
 
             await next();
         });
         server.onError((err, c): any => {
-            console.log('🚀 ~ server.onError ~ err:', err);
             if (err instanceof UnauthorizedError) {
                 return c.redirect('/sign-in');
             }
@@ -34,9 +34,19 @@ export default await createHonoServer({
         });
     },
     async getLoadContext(c) {
+        const isUnsecured = unsecuredPaths.some((path) => c.req.path.startsWith(path));
+        if (isUnsecured)
+            return {
+                trpcServer: null,
+                user: null,
+            };
+
         const trpcServerInstance = await _setupTrpcServer(c);
+
+        const user = await trpcServerInstance.user.ensureCreated.mutate();
         return {
             trpcServer: trpcServerInstance,
+            user,
         };
     },
 });
