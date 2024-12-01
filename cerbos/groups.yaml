@@ -8,3 +8,9 @@ resourcePolicy:
       roles:
         - Instructor
       effect: EFFECT_ALLOW
+
+    - actions:
+        - read
+      roles:
+        - Instructor
+      effect: EFFECT_ALLOW
