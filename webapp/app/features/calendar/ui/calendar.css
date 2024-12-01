@@ -1,3 +1,4 @@
+.rbc-row,
 .rbc-day-bg {
     cursor: pointer;
     user-select: none;
@@ -8,7 +9,11 @@
 }
 
 .rbc-event {
-    @apply bg-primary/80;
+    @apply bg-primary/80 !border-none;
+}
+
+.rbc-selected {
+    @apply !bg-primary/80;
 }
 
 .rbc-off-range {
@@ -16,7 +21,7 @@
 }
 
 .rbc-off-range-bg {
-    @apply bg-transparent;
+    @apply bg-background/70 z-10;
 }
 
 .rbc-month-row {

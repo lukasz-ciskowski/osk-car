@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { pl } from 'date-fns/locale/pl';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { ToolbarProps, View } from 'react-big-calendar';
+import { EventData } from './types';
 
 export default function CustomToolbar({
     localizer: { messages },
@@ -11,7 +12,7 @@ export default function CustomToolbar({
     view,
     views,
     date,
-}: ToolbarProps<{ id: string }>) {
+}: ToolbarProps<EventData>) {
     const startWeek = startOfWeek(date, { locale: pl });
     const endWeek = endOfWeek(date, { locale: pl });
 

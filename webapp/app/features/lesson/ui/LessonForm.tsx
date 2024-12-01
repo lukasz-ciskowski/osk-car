@@ -8,17 +8,15 @@ import { createDateWithTime } from '../lib/dates';
 import TimePicker from '@/components/ui/timePicker';
 import LengthPicker from '@/components/ui/lengthPicker';
 import TheoreticalLessonForm from './TheoreticalLessonForm';
-import { useAuth, useUser } from '@clerk/remix';
 import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
 import { useMemo } from 'react';
 
 interface Props {
     canSeeInstructorsList: boolean;
     currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
-    date: Date;
 }
 
-function LessonForm({ date, canSeeInstructorsList, currentUser }: Props) {
+function LessonForm({ canSeeInstructorsList, currentUser }: Props) {
     const { control, watch, setValue, getValues } = useFormContext<LessonFormState>();
 
     const type = watch('type');
@@ -96,7 +94,7 @@ function LessonForm({ date, canSeeInstructorsList, currentUser }: Props) {
                                                 new Date(getValues('endsAt')),
                                                 new Date(getValues('startsAt')),
                                             );
-                                            const newDate = createDateWithTime(date, e);
+                                            const newDate = createDateWithTime(new Date(getValues('startsAt')), e);
                                             field.onChange(newDate);
                                             setValue('endsAt', addMinutes(newDate, diff));
                                         }}

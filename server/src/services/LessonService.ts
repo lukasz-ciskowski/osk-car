@@ -20,6 +20,10 @@ class LessonService {
         }
         return [];
     }
+
+    async retrieveLesson(lessonId: string) {
+        return await lessonRepository.findById(lessonId);
+    }
 }
 
 export const lessonService = new LessonService();

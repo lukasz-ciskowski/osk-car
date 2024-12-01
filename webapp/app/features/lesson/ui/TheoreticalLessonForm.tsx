@@ -19,6 +19,7 @@ function TheoreticalLessonForm() {
             endsAt: endsAt?.toISOString() ?? '',
         };
     }, [startsAt, endsAt]);
+
     const results = useQueries({
         queries: [getClassroomsQueryObject(query, trpcClient), getGroupsQueryObject(query, trpcClient)],
     });

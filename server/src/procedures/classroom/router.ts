@@ -1,5 +1,5 @@
 import { router } from '../../router';
-import { getClassrooms } from './getClassRooms';
+import { getClassrooms } from './getClassrooms';
 
 export const setupClassroomRouter = () =>
     router({
