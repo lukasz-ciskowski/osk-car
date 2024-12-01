@@ -4,13 +4,6 @@ resourcePolicy:
   version: default
   rules:
     - actions:
-        - read
-      roles:
-        - Student
-        - Instructor
-      effect: EFFECT_ALLOW
-
-    - actions:
         - write
       roles:
         - Instructor

@@ -1,12 +1,11 @@
 apiVersion: api.cerbos.dev/v1
 resourcePolicy:
-  resource: instructors_list
+  resource: students_list
   version: default
   rules:
     - actions:
         - read
       roles:
-        - Admin
+        - Instructor
       effect: EFFECT_ALLOW
-
 
