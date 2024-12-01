@@ -1,8 +1,6 @@
-import { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
-import { getAllEventsForInstructor, eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
+import { MetaFunction } from 'react-router';
+import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
 import Calendar from '@/features/calendar/ui/Calendar';
-import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
 import { SelectedDateSlot } from '@/features/event/model/slot';
 import { useState } from 'react';
 import AddEventModal from '@/features/event/ui/AddEventModal';
@@ -10,8 +8,9 @@ import { queryClient } from '@/queryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import EventInfoModal from '@/features/event/ui/EventInfoModal';
 import { ListEvent } from '@/entities/lesson/model/event';
+import { Route } from '../calendar/+types/route';
 
-export const loader = async (args: LoaderFunctionArgs) => {
+export const loader = async (args: Route.LoaderArgs) => {
     const trpcServer = args.context.trpcServer;
 
     const [plannerRole] = await Promise.all([
@@ -34,8 +33,7 @@ export const meta: MetaFunction = () => {
     return [{ title: 'Kalendarz | OSK-Car' }];
 };
 
-function Dashboard() {
-    const result = useLoaderData<typeof loader>();
+function Dashboard({ loaderData }: Route.ComponentProps) {
     const [selectedDateSlot, setSelectedDateSlot] = useState<SelectedDateSlot | null>(null);
     const [selectedEvent, setSelectedEvent] = useState<ListEvent | null>(null);
 
@@ -59,9 +57,9 @@ function Dashboard() {
 
     return (
         <div className="p-4" id="calendar-wrapper">
-            <HydrationBoundary state={result.dehydratedState}>
+            <HydrationBoundary state={loaderData.dehydratedState}>
                 <Calendar
-                    canWriteLessons={!!result.role.plannerRole.planner?.write && !shouldDelayReopenModal}
+                    canWriteLessons={!!loaderData.role.plannerRole.planner?.write && !shouldDelayReopenModal}
                     onSelectedDateSlot={setSelectedDateSlot}
                     onSelectedEvent={setSelectedEvent}
                 />

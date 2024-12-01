@@ -1,4 +1,4 @@
-import { UserButton } from '@clerk/remix';
+import { UserButton } from '@clerk/clerk-react';
 import logo from '/logo.png';
 import NavLink from '@/components/ui/navLink';
 

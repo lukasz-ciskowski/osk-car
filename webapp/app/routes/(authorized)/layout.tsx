@@ -1,15 +1,14 @@
-import { Outlet, useLoaderData, useNavigation } from '@remix-run/react';
+import { Outlet, useNavigation } from 'react-router';
 import Header from './header';
-import { SignedIn } from '@clerk/remix';
-import { LoaderFunctionArgs } from '@remix-run/node';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import { useEffect, useRef } from 'react';
 import { useWaitForClient } from '@/hooks/useWaitForClient';
 import { getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
 import { queryClient } from '@/queryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { Route } from './+types/layout';
 
-export const loader = async (args: LoaderFunctionArgs) => {
+export const loader = async (args: Route.LoaderArgs) => {
     const trpcServer = args.context.trpcServer;
 
     const [groupsResult, studentsResult, plannerResult] = await Promise.all([
@@ -38,8 +37,7 @@ export function shouldRevalidate() {
     return false;
 }
 
-function Layout() {
-    const result = useLoaderData<typeof loader>();
+function Layout({ loaderData }: Route.ComponentProps) {
     const navigation = useNavigation();
     const loadingBar = useRef<LoadingBarRef>(null);
     const isClientReady = useWaitForClient();
@@ -53,17 +51,15 @@ function Layout() {
     }, [loadingBar, navigation]);
 
     return (
-        <HydrationBoundary state={result.dehydratedState}>
-            <SignedIn>
-                {isClientReady && <LoadingBar color="#f11946" ref={loadingBar} />}
-                <Header
-                    canAccessGroups={!!result.role.groupsResult.groups?.read}
-                    canAccessStudents={!!result.role.studentsResult.students_list?.read}
-                />
-                <div className="max-w-screen-2xl mx-auto p-2">
-                    <Outlet />
-                </div>
-            </SignedIn>
+        <HydrationBoundary state={loaderData.dehydratedState}>
+            {isClientReady && <LoadingBar color="#f11946" ref={loadingBar} />}
+            <Header
+                canAccessGroups={!!loaderData.role.groupsResult.groups?.read}
+                canAccessStudents={!!loaderData.role.studentsResult.students_list?.read}
+            />
+            <div className="max-w-screen-2xl mx-auto p-2">
+                <Outlet />
+            </div>
         </HydrationBoundary>
     );
 }

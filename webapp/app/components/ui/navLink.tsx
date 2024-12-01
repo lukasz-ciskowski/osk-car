@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { NavLinkProps, NavLink as RouterNavLink } from '@remix-run/react';
+import { NavLinkProps, NavLink as RouterNavLink } from 'react-router';
 
 function NavLink(props: NavLinkProps) {
     return (

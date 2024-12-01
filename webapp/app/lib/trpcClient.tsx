@@ -1,7 +1,7 @@
 import { PropsWithChildren, useMemo } from 'react';
-import { useAuth } from '@clerk/remix';
 import { setupTrpc, TrpcInstance } from './trpc';
-import { useNavigate } from '@remix-run/react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '@clerk/clerk-react';
 
 // @ts-ignore
 export let trpcClient: TrpcInstance = null;

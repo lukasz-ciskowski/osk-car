@@ -2,14 +2,10 @@ import { createHonoServer } from 'react-router-hono-server/node';
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth';
 import { Context } from 'hono';
 import { setupTrpc, TrpcInstance } from './lib/trpc';
+import { createClerkClient } from '@clerk/clerk-sdk-node';
+import { env } from 'hono/adapter';
 
 const unsecuredPaths = ['/sign-in'];
-
-declare module '@remix-run/node' {
-    interface AppLoadContext {
-        readonly trpcServer: TrpcInstance;
-    }
-}
 
 class UnauthorizedError extends Error {
     constructor() {
@@ -17,7 +13,7 @@ class UnauthorizedError extends Error {
     }
 }
 
-export const server = await createHonoServer({
+export default await createHonoServer({
     configure: (server) => {
         server.use('*', clerkMiddleware());
         server.use('*', async (c, next) => {
@@ -30,6 +26,7 @@ export const server = await createHonoServer({
             await next();
         });
         server.onError((err, c): any => {
+            console.log('🚀 ~ server.onError ~ err:', err);
             if (err instanceof UnauthorizedError) {
                 return c.redirect('/sign-in');
             }

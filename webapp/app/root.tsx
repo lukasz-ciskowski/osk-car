@@ -1,15 +1,12 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import type { LoaderFunction, MetaFunction } from 'react-router';
 
 import './tailwind.css';
-import { rootAuthLoader } from '@clerk/remix/ssr.server';
-import { ClerkApp } from '@clerk/remix';
+import { ClerkProvider } from '@clerk/clerk-react';
 import { plPL } from '@clerk/localizations';
 import TrpcProvider from './lib/trpcClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './queryClient';
-
-export const loader: LoaderFunction = (args) => rootAuthLoader(args);
 
 export const meta: MetaFunction = () => {
     return [{ title: 'OSK-Car' }];
@@ -39,18 +36,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
-export default ClerkApp(
-    function App() {
-        return (
-            <QueryClientProvider client={queryClient}>
+export default function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ClerkProvider
+                publishableKey={'pk_test_ZW5oYW5jZWQtY29yYWwtNDIuY2xlcmsuYWNjb3VudHMuZGV2JA'}
+                afterSignOutUrl="/sign-in"
+                localization={plPL}
+            >
                 <TrpcProvider>
                     <Outlet />
                 </TrpcProvider>
-            </QueryClientProvider>
-        );
-    },
-    {
-        localization: plPL,
-        afterSignOutUrl: '/sign-in',
-    },
-);
+            </ClerkProvider>
+        </QueryClientProvider>
+    );
+}

@@ -1,17 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SignedOut, SignInButton, SignUpButton } from '@clerk/remix';
-import { getAuth } from '@clerk/remix/ssr.server';
-import { LoaderFunction, redirect } from '@remix-run/node';
+import { SignedOut, SignInButton, SignUpButton } from '@clerk/clerk-react';
 import logo from '/logo.png';
-
-export const loader: LoaderFunction = async (args) => {
-    const { userId } = await getAuth(args);
-    if (userId) {
-        return redirect('/');
-    }
-    return {};
-};
 
 function SignIn() {
     return (
