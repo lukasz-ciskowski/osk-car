@@ -1,33 +1,27 @@
 import { z } from 'zod';
-import { LessonType } from './models';
+import { EventType } from './models';
 
-const BaseLessonSchema = z.object({
+const BaseEventSchema = z.object({
     startsAt: z.coerce.date(),
     endsAt: z.coerce.date(),
     instructorId: z.coerce.number(),
 });
 
-export const TheoreticalSchema = BaseLessonSchema.extend({
-    type: z.literal(LessonType.Theoretical),
+export const TheoreticalSchema = BaseEventSchema.extend({
+    type: z.literal(EventType.Theoretical),
     classroomId: z.coerce.number(),
     groupId: z.coerce.number(),
 });
 
-export const PracticalSchema = BaseLessonSchema.extend({
-    type: z.literal(LessonType.Practical),
-    userId: z.coerce.string(),
+export const PracticalSchema = BaseEventSchema.extend({
+    type: z.literal(EventType.Practical),
+    studentId: z.coerce.number(),
 });
 
-export const PreDrivingTestSchema = BaseLessonSchema.extend({
-    type: z.literal(LessonType.PreDrivingTest),
-    userId: z.coerce.string(),
-});
+export const EventSchema = z.discriminatedUnion('type', [TheoreticalSchema, PracticalSchema]);
 
-export const LessonSchema = z.discriminatedUnion('type', [TheoreticalSchema, PracticalSchema, PreDrivingTestSchema]);
+export type EventTypes = z.infer<typeof EventSchema>['type'];
 
-export type LessonTypes = z.infer<typeof LessonSchema>['type'];
-
-export type TheoreticalLessonForm = z.infer<typeof TheoreticalSchema>;
-export type PracticalLessonForm = z.infer<typeof PracticalSchema>;
-export type PreDrivingTestLessonForm = z.infer<typeof PreDrivingTestSchema>;
-export type LessonForm = z.infer<typeof LessonSchema>;
+export type TheoreticalEventForm = z.infer<typeof TheoreticalSchema>;
+export type PracticalEventForm = z.infer<typeof PracticalSchema>;
+export type EventForm = z.infer<typeof EventSchema>;

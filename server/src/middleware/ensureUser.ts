@@ -11,6 +11,7 @@ export const ensureUser = async (opts: { ctx: TrpcContext; next: (opts: { ctx: T
     return opts.next({
         ctx: {
             ...ctx,
+            user,
             userId,
         } as TrpcContext,
     });

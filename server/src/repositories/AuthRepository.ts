@@ -18,7 +18,7 @@ class AuthRepository {
         return { userId: isValid.sub };
     }
 
-    async getUser(userId: string) {
+    async getClerkUserContext(userId: string) {
         return await this.clerkClient.users.getUser(userId);
     }
 }

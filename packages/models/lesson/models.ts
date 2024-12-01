@@ -1,5 +1,4 @@
-export enum LessonType {
+export enum EventType {
     Theoretical = 'Theoretical',
     Practical = 'Practical',
-    PreDrivingTest = 'PreDrivingTest',
 }

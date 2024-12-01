@@ -1,24 +1,30 @@
 import { userRepository } from '../repositories/UserRepository';
 import { authRepository } from '../repositories/AuthRepository';
+import { User } from '@prisma/client';
 
 class UserService {
-    async findOrCreate(clerkId: string) {
-        const user = await userRepository.findUserByClerkId(clerkId);
-        if (!user) {
-            const userInfo = await authRepository.getUser(clerkId);
+    private cached_users: Record<string, User> = {};
 
-            return await userRepository.createUser({
+    async findOrCreate(clerkId: string) {
+        const user = this.cached_users[clerkId] ?? (await userRepository.findUserByClerkId(clerkId));
+        if (!user) {
+            const userInfo = await authRepository.getClerkUserContext(clerkId);
+
+            const newUser = await userRepository.createUser({
                 clerkId,
                 type: 'Instructor',
                 firstName: userInfo.firstName ?? '',
                 lastName: userInfo.lastName ?? '',
             });
+
+            this.cached_users[clerkId] = newUser;
+            return newUser;
         }
         return user;
     }
 
-    async findUser(clerkId: string) {
-        return await userRepository.findUserByClerkId(clerkId);
+    async findUserById(id: number) {
+        return await userRepository.findUserById(id);
     }
 }
 

@@ -1,8 +1,7 @@
 import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { lessonTypesDictionary } from '@/entities/lesson/lib/lessonTypes';
-import { LessonForm as LessonFormState, LessonType } from '@osk-car/models';
+import { eventTypesDictionary } from '@/entities/lesson/lib/evenTypes';
 import { addMinutes, differenceInMinutes, format } from 'date-fns';
 import { createDateWithTime } from '../lib/dates';
 import TimePicker from '@/components/ui/timePicker';
@@ -10,22 +9,19 @@ import LengthPicker from '@/components/ui/lengthPicker';
 import TheoreticalLessonForm from './TheoreticalLessonForm';
 import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
 import { useMemo } from 'react';
+import { EventForm, EventType } from '@osk-car/models';
 
 interface Props {
-    canSeeInstructorsList: boolean;
     currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
 }
 
-function LessonForm({ canSeeInstructorsList, currentUser }: Props) {
-    const { control, watch, setValue, getValues } = useFormContext<LessonFormState>();
+function EventFormContent({ currentUser }: Props) {
+    const { control, watch, setValue, getValues } = useFormContext<EventForm>();
 
     const type = watch('type');
 
     const instructorsList = useMemo(() => {
-        if (!canSeeInstructorsList) {
-            return [{ id: currentUser?.id ?? 0, fullName: `${currentUser?.firstName} ${currentUser?.lastName}` }];
-        }
-        return [];
+        return [{ id: currentUser?.id ?? 0, fullName: `${currentUser?.firstName} ${currentUser?.lastName}` }];
     }, [currentUser]);
 
     return (
@@ -42,7 +38,7 @@ function LessonForm({ canSeeInstructorsList, currentUser }: Props) {
                                     <SelectValue placeholder="Wybierz rodzaj zajęć" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(lessonTypesDictionary).map(([key, translation]) => (
+                                    {Object.entries(eventTypesDictionary).map(([key, translation]) => (
                                         <SelectItem key={key} value={key}>
                                             {translation}
                                         </SelectItem>
@@ -62,7 +58,7 @@ function LessonForm({ canSeeInstructorsList, currentUser }: Props) {
                             <Select
                                 value={field.value.toString()}
                                 onValueChange={field.onChange}
-                                disabled={!canSeeInstructorsList}
+                                disabled={instructorsList.length === 1}
                             >
                                 <SelectTrigger autoFocus>
                                     <SelectValue placeholder="Wybierz instruktora zajęć" />
@@ -137,8 +133,8 @@ function LessonForm({ canSeeInstructorsList, currentUser }: Props) {
                     </div>
                 </div>
             </div>
-            <div className="mt-8">{type === LessonType.Theoretical && <TheoreticalLessonForm />}</div>
+            <div className="mt-8">{type === EventType.Theoretical && <TheoreticalLessonForm />}</div>
         </>
     );
 }
-export default LessonForm;
+export default EventFormContent;

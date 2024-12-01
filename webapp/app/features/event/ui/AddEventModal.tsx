@@ -9,32 +9,31 @@ import {
 import { format, setHours } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import LessonForm from '@/features/lesson/ui/LessonForm';
-import { LessonSchema, LessonForm as LessonFormState } from '@osk-car/models';
-import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
+import EventFormContent from '@/features/event/ui/EventFormContent';
+import { getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
 import { useForm } from 'react-hook-form';
 import { useMemo } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createLesson } from '@/entities/lesson/api/createLesson';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { createEvent } from '@/entities/lesson/api/createEvent';
 import { trpcClient } from '@/lib/trpcClient';
 import { FormProvider } from '@/components/ui/form';
-import { SelectedDateSlot } from '../model/lessonModal';
-import { lessonsQueryObject } from '@/entities/lesson/api/getAllLessons';
+import { SelectedDateSlot } from '../model/slot';
+import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
+import { EventForm, EventSchema } from '@osk-car/models';
 
-const resolver = zodResolver(LessonSchema);
+const resolver = zodResolver(EventSchema);
 
 interface Props {
     dates: SelectedDateSlot;
-    currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
-    canSeeInstructorsList: boolean;
     onClose: () => void;
 }
 
-function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: Props) {
+function AddEventModal({ dates, onClose }: Props) {
     const { mutate, isPending } = useMutation({
-        mutationFn: createLesson,
+        mutationFn: createEvent,
     });
     const queryClient = useQueryClient();
+    const currentUser = useSuspenseQuery(getCurrentUserQueryObject(trpcClient)).data;
 
     const startsAt = useMemo(() => {
         if ('startDate' in dates) return dates.startDate;
@@ -48,7 +47,7 @@ function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: 
         return setHours(new Date(), 17);
     }, []);
 
-    const formMethods = useForm<LessonFormState>({
+    const formMethods = useForm<EventForm>({
         resolver,
         defaultValues: {
             startsAt,
@@ -57,7 +56,7 @@ function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: 
         },
     });
 
-    const handleAddNewLesson = (data: LessonFormState) => {
+    const handleAddEvent = (data: EventForm) => {
         mutate(
             {
                 data,
@@ -66,7 +65,7 @@ function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: 
             {
                 onSuccess: () => {
                     queryClient.refetchQueries({
-                        queryKey: lessonsQueryObject(trpcClient).queryKey,
+                        queryKey: eventForInstructorQueryObject(trpcClient).queryKey,
                     });
                     onClose();
                 },
@@ -82,8 +81,8 @@ function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: 
                     <DialogDescription>{format(startsAt, "'Nowe zajęcia na dzień ' dd.MM.yyyy")}</DialogDescription>
                 </DialogHeader>
                 <FormProvider {...formMethods}>
-                    <form onSubmit={formMethods.handleSubmit(handleAddNewLesson)}>
-                        <LessonForm canSeeInstructorsList={canSeeInstructorsList} currentUser={currentUser} />
+                    <form onSubmit={formMethods.handleSubmit(handleAddEvent)}>
+                        <EventFormContent currentUser={currentUser} />
                         <DialogFooter className="mt-4">
                             <Button className="btn" type="submit" isLoading={isPending}>
                                 Dodaj
@@ -95,4 +94,4 @@ function AddLessonModal({ dates, currentUser, canSeeInstructorsList, onClose }: 
         </Dialog>
     );
 }
-export default AddLessonModal;
+export default AddEventModal;

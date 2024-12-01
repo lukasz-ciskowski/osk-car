@@ -1,37 +1,31 @@
 import { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { getAllLessons, lessonsQueryObject } from '@/entities/lesson/api/getAllLessons';
+import { getAllEventsForInstructor, eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
 import Calendar from '@/features/calendar/ui/Calendar';
 import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
-import { SelectedDateSlot } from '@/features/lesson/model/lessonModal';
+import { SelectedDateSlot } from '@/features/event/model/slot';
 import { useState } from 'react';
-import AddLessonModal from '@/features/lesson/ui/AddLessonModal';
+import AddEventModal from '@/features/event/ui/AddEventModal';
 import { queryClient } from '@/queryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import LessonInfoModal from '@/features/lesson/ui/LessonInfoModal';
+import EventInfoModal from '@/features/event/ui/EventInfoModal';
+import { ListEvent } from '@/entities/lesson/model/event';
 
 export const loader = async (args: LoaderFunctionArgs) => {
     const trpcServer = args.context.trpcServer;
 
-    const [plannerRole, instructorsListRole, currentUser] = await Promise.all([
+    const [plannerRole] = await Promise.all([
         trpcServer.role.checkRole.query({
             kind: 'planner',
-            actions: ['write', 'read'],
+            actions: ['write'],
         }),
-        trpcServer.role.checkRole.query({
-            kind: 'instructors_list',
-            actions: ['read'],
-        }),
-        getCurrentUser(args),
-        await queryClient.prefetchQuery(lessonsQueryObject(trpcServer)),
+        await queryClient.prefetchQuery(eventForInstructorQueryObject(trpcServer)),
     ]);
 
     return {
         role: {
             plannerRole: plannerRole,
-            instructorsListRole: instructorsListRole,
         },
-        currentUser,
         dehydratedState: dehydrate(queryClient),
     };
 };
@@ -43,7 +37,7 @@ export const meta: MetaFunction = () => {
 function Dashboard() {
     const result = useLoaderData<typeof loader>();
     const [selectedDateSlot, setSelectedDateSlot] = useState<SelectedDateSlot | null>(null);
-    const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+    const [selectedEvent, setSelectedEvent] = useState<ListEvent | null>(null);
 
     const [shouldDelayReopenModal, setShouldDelayReopenModal] = useState<boolean>(false);
 
@@ -71,16 +65,8 @@ function Dashboard() {
                     onSelectedDateSlot={setSelectedDateSlot}
                     onSelectedEvent={setSelectedEvent}
                 />
-                {selectedDateSlot && (
-                    <AddLessonModal
-                        dates={selectedDateSlot}
-                        currentUser={result.currentUser}
-                        canSeeInstructorsList={!!result.role.instructorsListRole.instructors_list?.read}
-                        onClose={handleCloseSlot}
-                    />
-                )}
-
-                {selectedEvent && <LessonInfoModal lessonId={selectedEvent} onClose={handleCloseEvent} />}
+                {selectedDateSlot && <AddEventModal dates={selectedDateSlot} onClose={handleCloseSlot} />}
+                {selectedEvent && <EventInfoModal event={selectedEvent} onClose={handleCloseEvent} />}
             </HydrationBoundary>
         </div>
     );

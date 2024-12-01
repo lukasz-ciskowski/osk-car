@@ -5,21 +5,32 @@ import { LoaderFunctionArgs } from '@remix-run/node';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import { useEffect, useRef } from 'react';
 import { useWaitForClient } from '@/hooks/useWaitForClient';
+import { getCurrentUserQueryObject } from '@/entities/user/api/getCurrentUser';
+import { queryClient } from '@/queryClient';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 export const loader = async (args: LoaderFunctionArgs) => {
     const trpcServer = args.context.trpcServer;
 
-    const groupsResult = await trpcServer.role.checkRole.query({
-        kind: 'groups',
-        actions: ['read'],
-    });
-    const plannerResult = await trpcServer.role.checkRole.query({
-        kind: 'planner',
-        actions: ['read'],
-    });
+    const [groupsResult, studentsResult, plannerResult] = await Promise.all([
+        trpcServer.role.checkRole.query({
+            kind: 'groups',
+            actions: ['read'],
+        }),
+        trpcServer.role.checkRole.query({
+            kind: 'students_list',
+            actions: ['read'],
+        }),
+        trpcServer.role.checkRole.query({
+            kind: 'planner',
+            actions: ['write'],
+        }),
+        await queryClient.prefetchQuery(getCurrentUserQueryObject(trpcServer)),
+    ]);
 
     return {
-        role: { groupsResult, plannerResult },
+        role: { groupsResult, plannerResult, studentsResult },
+        dehydratedState: dehydrate(queryClient),
     };
 };
 
@@ -42,16 +53,18 @@ function Layout() {
     }, [loadingBar, navigation]);
 
     return (
-        <SignedIn>
-            {isClientReady && <LoadingBar color="#f11946" ref={loadingBar} />}
-            <Header
-                canAccessCalendar={!!result.role.plannerResult.planner?.read}
-                canAccessGroups={!!result.role.groupsResult.groups?.read}
-            />
-            <div className="max-w-screen-2xl mx-auto p-2">
-                <Outlet />
-            </div>
-        </SignedIn>
+        <HydrationBoundary state={result.dehydratedState}>
+            <SignedIn>
+                {isClientReady && <LoadingBar color="#f11946" ref={loadingBar} />}
+                <Header
+                    canAccessGroups={!!result.role.groupsResult.groups?.read}
+                    canAccessStudents={!!result.role.studentsResult.students_list?.read}
+                />
+                <div className="max-w-screen-2xl mx-auto p-2">
+                    <Outlet />
+                </div>
+            </SignedIn>
+        </HydrationBoundary>
     );
 }
 export default Layout;

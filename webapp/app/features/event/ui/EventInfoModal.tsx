@@ -1,18 +1,19 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { retrieveLessonQueryObject } from '@/entities/lesson/api/retrieveLesson';
+import { retrieveEventQueryObject } from '@/entities/lesson/api/retrieveEvent';
 import { trpcClient } from '@/lib/trpcClient';
 import { useQuery } from '@tanstack/react-query';
-import LessonDetails from './LessonDetails';
+import EventDetails from './EventDetails';
 import { Spinner } from '@/components/ui/spinner';
+import { ListEvent } from '@/entities/lesson/model/event';
 
 interface Props {
     onClose: () => void;
-    lessonId: string;
+    event: ListEvent;
 }
 
-function LessonInfoModal({ onClose, lessonId }: Props) {
+function EventInfoModal({ onClose, event }: Props) {
     const { isLoading, data } = useQuery({
-        ...retrieveLessonQueryObject(lessonId, trpcClient),
+        ...retrieveEventQueryObject(event.id, event.type, trpcClient),
         staleTime: 1000 * 60 * 30,
     });
 
@@ -27,10 +28,10 @@ function LessonInfoModal({ onClose, lessonId }: Props) {
                         <Spinner />
                     </div>
                 ) : (
-                    <LessonDetails lesson={data!} />
+                    <EventDetails event={data!} />
                 )}
             </DialogContent>
         </Dialog>
     );
 }
-export default LessonInfoModal;
+export default EventInfoModal;

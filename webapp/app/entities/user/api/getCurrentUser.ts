@@ -1,5 +1,17 @@
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { TrpcInstance } from '@/lib/trpc';
+import { queryOptions } from '@tanstack/react-query';
 
-export function getCurrentUser(c: LoaderFunctionArgs) {
-    return c.context.trpcServer.user.getCurrentUser.query();
+interface Args {
+    trpc: TrpcInstance;
 }
+
+export function getCurrentUser(args: Args) {
+    return args.trpc.user.getCurrentUser.query();
+}
+
+export const getCurrentUserQueryObject = (trpc: TrpcInstance) =>
+    queryOptions({
+        queryKey: ['user'],
+        queryFn: () => getCurrentUser({ trpc }),
+        staleTime: Infinity,
+    });

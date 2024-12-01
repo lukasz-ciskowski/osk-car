@@ -3,18 +3,19 @@ import './calendar.css';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { Calendar as ReactCalendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import { pl } from 'date-fns/locale/pl';
-import { getAllLessons, lessonsQueryObject } from '@/entities/lesson/api/getAllLessons';
+import { eventForInstructorQueryObject } from '@/entities/lesson/api/getAllEvents';
 import CustomToolbar from './CustomToolbar';
-import { SelectedDateSlot } from '@/features/lesson/model/lessonModal';
+import { SelectedDateSlot } from '@/features/event/model/slot';
 import { useWaitForClient } from '@/hooks/useWaitForClient';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { trpcClient } from '@/lib/trpcClient';
 import FullscreenSpinner from '@/components/ui/fullscreenSpinner';
 import CustomEvent from './CustomEvent';
+import { ListEvent } from '@/entities/lesson/model/event';
 
 interface Props {
     onSelectedDateSlot: (date: SelectedDateSlot) => void;
-    onSelectedEvent: (id: string) => void;
+    onSelectedEvent: (event: ListEvent) => void;
     canWriteLessons: boolean;
 }
 
@@ -30,7 +31,7 @@ const localizer = dateFnsLocalizer({
 
 function Calendar({ canWriteLessons, onSelectedDateSlot, onSelectedEvent }: Props) {
     const isClientReady = useWaitForClient();
-    const { data: lessons, fetchStatus } = useSuspenseQuery(lessonsQueryObject(trpcClient));
+    const { data: events, fetchStatus } = useSuspenseQuery(eventForInstructorQueryObject(trpcClient));
 
     if (!isClientReady) return null;
 
@@ -43,14 +44,14 @@ function Calendar({ canWriteLessons, onSelectedDateSlot, onSelectedEvent }: Prop
                 defaultDate={new Date()}
                 scrollToTime={new Date()}
                 style={{ height: 1200 }}
-                events={lessons.map((lesson) => ({
-                    id: lesson.id,
-                    lesson,
-                    start: new Date(lesson.startsAt),
-                    end: new Date(lesson.endsAt),
+                events={events.map((event) => ({
+                    id: event.id,
+                    event,
+                    start: new Date(event.startsAt),
+                    end: new Date(event.endsAt),
                 }))}
-                onSelectEvent={(event) => {
-                    onSelectedEvent(event.id);
+                onSelectEvent={(selected) => {
+                    onSelectedEvent(selected.event);
                 }}
                 onSelectSlot={(slotInfo) => {
                     if (!canWriteLessons) return;

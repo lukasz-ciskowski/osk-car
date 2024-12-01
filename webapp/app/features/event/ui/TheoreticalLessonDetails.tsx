@@ -1,26 +1,26 @@
 import { TextLabel, TextLabelContainer, TextLabelValue } from '@/components/ui/textLabel';
-import { retrieveLesson } from '@/entities/lesson/api/retrieveLesson';
+import { RetrievedTheoreticalEvent } from '@/entities/lesson/model/event';
 
 interface Props {
-    lesson: Awaited<ReturnType<typeof retrieveLesson>>;
+    event: RetrievedTheoreticalEvent;
 }
 
-function TheoreticalLessonDetails({ lesson }: Props) {
+function TheoreticalEventDetails({ event }: Props) {
     return (
         <>
             <TextLabelContainer>
                 <TextLabel>Sala</TextLabel>
-                <TextLabelValue>{lesson.classroom.name}</TextLabelValue>
+                <TextLabelValue>{event.classroom.name}</TextLabelValue>
             </TextLabelContainer>
             <TextLabelContainer>
                 <TextLabel>Grupa</TextLabel>
-                <TextLabelValue>{lesson.group.name}</TextLabelValue>
+                <TextLabelValue>{event.group.name}</TextLabelValue>
             </TextLabelContainer>
             <TextLabelContainer>
                 <TextLabel>Prowadzący</TextLabel>
-                <TextLabelValue>{`${lesson.instructor.firstName} ${lesson.instructor.lastName}`}</TextLabelValue>
+                <TextLabelValue>{`${event.instructor.firstName} ${event.instructor.lastName}`}</TextLabelValue>
             </TextLabelContainer>
         </>
     );
 }
-export default TheoreticalLessonDetails;
+export default TheoreticalEventDetails;

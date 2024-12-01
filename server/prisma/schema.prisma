@@ -8,19 +8,20 @@ datasource db {
 }
 
 model User {
-  id                   Int                    @id @default(autoincrement())
-  clerkId              String                 @unique
-  firstName            String
-  lastName             String
-  type                 UserType
-  UserGroupAssociation UserGroupAssociation[]
-  TheoreticalLesson    TheoreticalLesson[]
+  id                        Int                    @id @default(autoincrement())
+  clerkId                   String                 @unique
+  firstName                 String
+  lastName                  String
+  type                      UserType
+  userGroupAssociation      UserGroupAssociation[]
+  theoreticalEvent          TheoreticalEvent[]
+  studentPracticalEvents    PracticalEvent[]       @relation("practical_student_event")
+  instructorPracticalEvents PracticalEvent[]       @relation("practical_instructor_event")
 }
 
 enum UserType {
   Student
   Instructor
-  Admin
 }
 
 model UserGroupAssociation {
@@ -32,19 +33,19 @@ model UserGroupAssociation {
 }
 
 model Classroom {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  theoreticalLesson TheoreticalLesson[]
+  id               Int                @id @default(autoincrement())
+  name             String
+  theoreticalEvent TheoreticalEvent[]
 }
 
 model Group {
   id                   Int                    @id @default(autoincrement())
   name                 String
-  theoreticalLesson    TheoreticalLesson[]
+  theoreticalEvent     TheoreticalEvent[]
   UserGroupAssociation UserGroupAssociation[]
 }
 
-model TheoreticalLesson {
+model TheoreticalEvent {
   id           String    @id @default(uuid()) @map("_id")
   startsAt     DateTime
   endsAt       DateTime
@@ -54,4 +55,14 @@ model TheoreticalLesson {
   groupId      Int
   instructor   User      @relation(fields: [instructorId], references: [id])
   instructorId Int
+}
+
+model PracticalEvent {
+  id           String   @id @default(uuid()) @map("_id")
+  startsAt     DateTime
+  endsAt       DateTime
+  instructor   User     @relation("practical_instructor_event", fields: [instructorId], references: [id])
+  instructorId Int
+  student      User     @relation("practical_student_event", fields: [studentId], references: [id])
+  studentId    Int
 }

@@ -1,8 +1,8 @@
-import { getAllLessons } from '@/entities/lesson/api/getAllLessons';
+import { getAllEventsForInstructor } from '@/entities/lesson/api/getAllEvents';
 
 export interface EventData {
     id: string;
-    lesson: Awaited<ReturnType<typeof getAllLessons>>[number];
+    event: Awaited<ReturnType<typeof getAllEventsForInstructor>>[number];
     start: Date;
     end: Date;
 }

@@ -4,13 +4,13 @@ import { Spinner } from '@/components/ui/spinner';
 import { getClassroomsQueryObject } from '@/entities/classroom/api/getClassrooms';
 import { getGroupsQueryObject } from '@/entities/group/api/getGroups';
 import { trpcClient } from '@/lib/trpcClient';
-import { TheoreticalLessonForm as TheoreticalLessonFormState } from '@osk-car/models';
+import { TheoreticalEventForm } from '@osk-car/models';
 import { useQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 function TheoreticalLessonForm() {
-    const { control, watch } = useFormContext<TheoreticalLessonFormState>();
+    const { control, watch } = useFormContext<TheoreticalEventForm>();
     const [startsAt, endsAt] = watch(['startsAt', 'endsAt']);
 
     const query = useMemo(() => {
