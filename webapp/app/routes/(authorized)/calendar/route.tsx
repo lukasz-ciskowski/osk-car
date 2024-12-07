@@ -39,7 +39,7 @@ export const meta: MetaFunction = () => {
     return [{ title: 'Kalendarz | OSK-Car' }];
 };
 
-function Dashboard({ loaderData }: Route.ComponentProps) {
+function CalendarPage({ loaderData }: Route.ComponentProps) {
     const [selectedDateSlot, setSelectedDateSlot] = useState<SelectedDateSlot | null>(null);
     const [selectedEvent, setSelectedEvent] = useState<ListEvent | null>(null);
 
@@ -81,4 +81,4 @@ function Dashboard({ loaderData }: Route.ComponentProps) {
         </div>
     );
 }
-export default Dashboard;
+export default CalendarPage;

@@ -3,8 +3,6 @@ import { Route } from '../../groups/[id]/+types/route';
 import { checkRoleQueryObject } from '@/entities/role/api/checkRole';
 import { MetaFunction, redirect } from 'react-router';
 import { retrieveGroupWithStudentsQueryObject } from '@/entities/group/api/retrieveGroupWithStudents';
-import { dehydrate, HydrationBoundary, useSuspenseQuery } from '@tanstack/react-query';
-import { trpcClient } from '@/lib/trpcClient';
 import SingleGroupTable from '@/features/groups/ui/SingleGroupTable';
 
 export async function loader({ context, params }: Route.LoaderArgs) {
@@ -16,7 +14,7 @@ export async function loader({ context, params }: Route.LoaderArgs) {
             trpc,
             query: {
                 kind: 'groups',
-                actions: ['read'],
+                actions: ['read', 'write'],
             },
         }),
     );
