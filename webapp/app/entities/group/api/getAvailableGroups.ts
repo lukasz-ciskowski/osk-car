@@ -6,8 +6,8 @@ interface GetGroupsQuery {
     endsAt: string;
 }
 
-export const getGroupsQueryObject = (q: GetGroupsQuery, trpc: TrpcInstance) =>
+export const getAvailableGroupsQueryObject = (q: GetGroupsQuery, trpc: TrpcInstance) =>
     queryOptions({
-        queryKey: ['groups', q],
-        queryFn: () => trpc.groups.getGroups.query(q),
+        queryKey: ['available-groups', q],
+        queryFn: () => trpc.groups.getAvailableGroups.query(q),
     });

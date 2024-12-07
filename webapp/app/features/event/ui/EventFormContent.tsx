@@ -11,9 +11,10 @@ import { getCurrentUser } from '@/entities/user/api/getCurrentUser';
 import { useMemo } from 'react';
 import { EventForm, EventType } from '@osk-car/models';
 import PracticalLessonForm from './PracticalLessonForm';
+import { User } from '@/entities/user/model/user';
 
 interface Props {
-    currentUser: Awaited<ReturnType<typeof getCurrentUser>>;
+    currentUser: User;
 }
 
 function EventFormContent({ currentUser }: Props) {

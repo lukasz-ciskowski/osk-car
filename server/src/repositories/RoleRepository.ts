@@ -3,7 +3,7 @@ import { env } from 'hono/adapter';
 import { AppEnv } from '..';
 import { GRPC } from '@cerbos/grpc';
 import { User } from '@prisma/client';
-import { Modules } from '../models/AuthModel';
+import { Modules } from '@osk-car/models';
 
 type RoleResponse = Record<Modules['kind'], Partial<Record<Modules['actions'][number], boolean>>>;
 

@@ -2,7 +2,7 @@ import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/for
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { getClassroomsQueryObject } from '@/entities/classroom/api/getClassrooms';
-import { getGroupsQueryObject } from '@/entities/group/api/getGroups';
+import { getAvailableGroupsQueryObject } from '@/entities/group/api/getAvailableGroups';
 import { trpcClient } from '@/lib/trpcClient';
 import { TheoreticalEventForm } from '@osk-car/models';
 import { useQueries } from '@tanstack/react-query';
@@ -21,7 +21,7 @@ function TheoreticalLessonForm() {
     }, [startsAt, endsAt]);
 
     const results = useQueries({
-        queries: [getClassroomsQueryObject(query, trpcClient), getGroupsQueryObject(query, trpcClient)],
+        queries: [getClassroomsQueryObject(query, trpcClient), getAvailableGroupsQueryObject(query, trpcClient)],
     });
 
     const isLoading = results.some((result) => result.isLoading);

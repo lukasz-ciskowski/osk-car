@@ -3,21 +3,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner';
 import { getStudentsQueryObject } from '@/entities/user/api/getStudents';
 import { trpcClient } from '@/lib/trpcClient';
-import { PracticalEventForm, TheoreticalEventForm } from '@osk-car/models';
+import { PracticalEventForm } from '@osk-car/models';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 function PracticalLessonForm() {
-    const { control, watch } = useFormContext<PracticalEventForm>();
-    const [startsAt, endsAt] = watch(['startsAt', 'endsAt']);
-
-    const query = useMemo(() => {
-        return {
-            startsAt: startsAt?.toISOString() ?? '',
-            endsAt: endsAt?.toISOString() ?? '',
-        };
-    }, [startsAt, endsAt]);
+    const { control } = useFormContext<PracticalEventForm>();
 
     const { isLoading, data } = useQuery(getStudentsQueryObject(trpcClient));
 

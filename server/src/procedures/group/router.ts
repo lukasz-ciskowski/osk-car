@@ -1,7 +1,15 @@
 import { router } from '../../router';
-import { getGroups } from './getGroups';
+import { addStudentToGroup } from './addStudentToGroup';
+import { getAllGroups } from './getAllGroups';
+import { getAvailableGroups } from './getAvailableGroups';
+import { getStudentsToApplyToGroup } from './getStudentsToApplyToGroup';
+import { retrieveGroupWithStudents } from './retrieveGroupWithStudents';
 
 export const setupGroupRouter = () =>
     router({
-        getGroups: getGroups(),
+        getAllGroups: getAllGroups(),
+        getAvailableGroups: getAvailableGroups(),
+        retrieveGroupWithStudents: retrieveGroupWithStudents(),
+        getStudentsToApplyToGroup: getStudentsToApplyToGroup(),
+        addStudentToGroup: addStudentToGroup(),
     });

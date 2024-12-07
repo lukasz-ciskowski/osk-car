@@ -4,3 +4,6 @@ export { EventType } from './event/models';
 
 export type { Modules } from './role/models';
 export { GroupsModuleSchema, PlannerModuleSchema, StudentsListModuleSchema, ModulesSchema } from './role/schemas';
+
+export type { AddStudentForm } from './groups/schemas';
+export { AddStudentSchema } from './groups/schemas';
